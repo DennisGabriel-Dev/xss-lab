@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XSS Demo - Guestbook Vulnerável</title>
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <main class="container">
+      <header>
+        <h1>XSS Lab</h1>
+      </header>
+
+      <section class="card">
+        <h2>Novo comentário</h2>
+        <form id="comment-form">
+          <label for="author">Nome</label>
+          <input id="author" name="author" type="text" placeholder="Seu nome" />
+
+          <label for="message">Mensagem</label>
+          <textarea id="message" name="message" rows="4" placeholder="Escreva sua mensagem"></textarea>
+
+          <button type="submit">Enviar</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <h2>Busca vulnerável</h2> <!-- Reflected XSS -->
+        <form action="/search" method="GET">
+          <label for="q">Termo de busca</label>
+          <input id="q" name="q" type="text" placeholder="Digite um termo" />
+          <button type="submit">Buscar</button>
+        </form>
+        <!-- p class="hint">A página de resultado reflete o parâmetro <code>q</code> sem escape.</p -->
+      </section>
+
+      <section class="card">
+        <h2>Comentários salvos</h2> <!-- Stored XSS -->
+        <div id="comments" class="comments"></div>
+      </section>
+    </main>
+
+    <script src="/static/app.js"></script>
+  </body>
+</html>
