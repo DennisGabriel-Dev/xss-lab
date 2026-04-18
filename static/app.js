@@ -3,6 +3,14 @@ const API_BASE = window.location.origin;
 const form = document.getElementById("comment-form");
 const commentsEl = document.getElementById("comments");
 document.cookie = "test=123";
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+}
 
 async function fetchComments() {
   const response = await fetch(`${API_BASE}/api/comments`);
@@ -13,14 +21,12 @@ async function fetchComments() {
     return;
   }
 
-  // VULNERABILIDADE INTENCIONAL (Stored XSS):
-  // message e author são inseridos diretamente com innerHTML.
   commentsEl.innerHTML = comments
     .map(
       (comment) => `
       <article class="comment">
-        <div class="meta">#${comment.id} por ${comment.author} em ${comment.created_at}</div>
-        <div class="message">${comment.message}</div>
+        <div class="meta">#${escapeHtml(comment.id)} por ${escapeHtml(comment.author)} em ${escapeHtml(comment.created_at)}</div>
+        <div class="message">${escapeHtml(comment.message)}</div>
       </article>
     `
     )

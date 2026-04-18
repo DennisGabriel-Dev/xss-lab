@@ -1,3 +1,4 @@
+import html
 import os
 import sqlite3
 from datetime import datetime
@@ -86,16 +87,15 @@ def create_comment():
 @app.route("/search")
 def reflected_search():
     q = request.args.get("q", "")
+    q_safe = html.escape(q, quote=True)
 
-    # VULNERABILIDADE INTENCIONAL:
-    # O valor de q é renderizado diretamente no HTML sem qualquer sanitização/escape.
     return f"""
     <!doctype html>
     <html lang=\"pt-BR\">
       <head>
         <meta charset=\"utf-8\">
         <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">
-        <title>Busca Vulnerável</title>
+        <title>Busca</title>
         <style>
           body {{ font-family: Arial, sans-serif; margin: 2rem; background: #0f172a; color: #e2e8f0; }}
           .card {{ background: #1e293b; padding: 1.2rem; border-radius: 10px; max-width: 860px; }}
@@ -106,8 +106,8 @@ def reflected_search():
       <body>
         <div class=\"card\">
           <h1>Resultado da busca</h1>
-          <p>Você buscou por: {q}</p>
-          <p><strong>Observação:</strong> Esta página é intencionalmente vulnerável a Reflected XSS.</p>
+          <p>Você buscou por: {q_safe}</p>
+          <p><strong>Observação:</strong> O termo acima é exibido com <code>html.escape</code> (mitigação de Reflected XSS).</p>
           <p><a href=\"/\">Voltar para o guestbook</a></p>
         </div>
       </body>
