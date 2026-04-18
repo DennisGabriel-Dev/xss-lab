@@ -2,6 +2,7 @@ const API_BASE = window.location.origin;
 
 const form = document.getElementById("comment-form");
 const commentsEl = document.getElementById("comments");
+document.cookie = "test=123";
 
 async function fetchComments() {
   const response = await fetch(`${API_BASE}/api/comments`);
